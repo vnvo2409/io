@@ -31,6 +31,8 @@ def test_read_file():
     """Test case for reading S3"""
     import boto3
 
+    assert False
+
     os.environ["AWS_REGION"] = "us-east-1"
     os.environ["AWS_ACCESS_KEY_ID"] = "ACCESS_KEY"
     os.environ["AWS_SECRET_ACCESS_KEY"] = "SECRET_KEY"
