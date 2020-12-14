@@ -62,26 +62,61 @@ constexpr size_t kUploadRetries = 3;
 
 constexpr size_t kS3ReadAppendableFileBufferSize = 1024 * 1024;  // 1 MB
 
+static inline char* TF_MakeStatusMessage(const Aws::String& str) {
+  char* msg = new char[str.length() + 1];
+  strcpy(msg, str.c_str());
+  return msg;
+}
+
 static inline void TF_SetStatusFromAWSError(
     const Aws::Client::AWSError<Aws::S3::S3Errors>& error, TF_Status* status) {
-  switch (error.GetResponseCode()) {
-    case Aws::Http::HttpResponseCode::FORBIDDEN:
-      TF_SetStatus(status, TF_FAILED_PRECONDITION,
-                   "AWS Credentials have not been set properly. "
-                   "Unable to access the specified S3 location");
-      break;
-    case Aws::Http::HttpResponseCode::REQUESTED_RANGE_NOT_SATISFIABLE:
-      TF_SetStatus(status, TF_OUT_OF_RANGE, "Read less bytes than requested");
-      break;
-    case Aws::Http::HttpResponseCode::NOT_FOUND:
-      TF_SetStatus(status, TF_NOT_FOUND, error.GetMessage().c_str());
-      break;
-    default:
-      TF_SetStatus(
-          status, TF_UNKNOWN,
-          (error.GetExceptionName() + ": " + error.GetMessage()).c_str());
-      break;
+  auto http_code = error.GetResponseCode();
+  auto status_msg = error.GetExceptionName() + ": " + error.GetMessage();
+  if (http_code < Aws::Http::HttpResponseCode::CONTINUE) {
+    return TF_SetStatus(status, TF_UNKNOWN, TF_MakeStatusMessage(status_msg));
   }
+  if (Aws::Http::HttpResponseCode::MULTIPLE_CHOICES <= http_code &&
+      http_code < Aws::Http::HttpResponseCode::PERMANENT_REDIRECT) {
+    return TF_SetStatus(status, TF_UNKNOWN, TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code == Aws::Http::HttpResponseCode::BAD_REQUEST) {
+    return TF_SetStatus(status, TF_INVALID_ARGUMENT,
+                        TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code == Aws::Http::HttpResponseCode::UNAUTHORIZED) {
+    return TF_SetStatus(status, TF_UNAUTHENTICATED,
+                        TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code == Aws::Http::HttpResponseCode::FORBIDDEN) {
+    return TF_SetStatus(status, TF_PERMISSION_DENIED,
+                        TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code == Aws::Http::HttpResponseCode::NOT_FOUND) {
+    return TF_SetStatus(status, TF_NOT_FOUND, TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code == Aws::Http::HttpResponseCode::METHOD_NOT_ALLOWED ||
+      http_code == Aws::Http::HttpResponseCode::NOT_ACCEPTABLE ||
+      http_code == Aws::Http::HttpResponseCode::PROXY_AUTHENTICATION_REQUIRED) {
+    return TF_SetStatus(status, TF_PERMISSION_DENIED,
+                        TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code == Aws::Http::HttpResponseCode::REQUEST_TIMEOUT) {
+    return TF_SetStatus(status, TF_RESOURCE_EXHAUSTED,
+                        TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code == Aws::Http::HttpResponseCode::PRECONDITION_FAILED) {
+    return TF_SetStatus(status, TF_FAILED_PRECONDITION,
+                        TF_MakeStatusMessage(status_msg));
+  }
+  if (http_code ==
+      Aws::Http::HttpResponseCode::REQUESTED_RANGE_NOT_SATISFIABLE) {
+    return TF_SetStatus(status, TF_OUT_OF_RANGE,
+                        TF_MakeStatusMessage(status_msg));
+  }
+  if (Aws::Http::HttpResponseCode::INTERNAL_SERVER_ERROR <= http_code) {
+    return TF_SetStatus(status, TF_INTERNAL, TF_MakeStatusMessage(status_msg));
+  }
+  return TF_SetStatus(status, TF_UNKNOWN, TF_MakeStatusMessage(status_msg));
 }
 
 void ParseS3Path(const Aws::String& fname, bool object_empty_ok,
@@ -677,7 +712,8 @@ void Stat(const TF_Filesystem* filesystem, const char* path,
   if (!found)
     return TF_SetStatus(
         status, TF_NOT_FOUND,
-        absl::StrCat("Object ", path, " does not exist").c_str());
+        TF_MakeStatusMessage(
+            absl::StrCat("Object ", path, " does not exist").c_str()));
   TF_SetStatus(status, TF_OK, "");
 }
 
@@ -964,13 +1000,15 @@ void CopyFile(const TF_Filesystem* filesystem, const char* src, const char* dst,
   else if (num_parts > 10000)
     TF_SetStatus(
         status, TF_UNIMPLEMENTED,
-        absl::StrCat("MultiPartCopy with number of parts more than 10000 is "
-                     "not supported. Your object ",
-                     src, " required ", num_parts,
-                     " as multi_part_copy_part_size is set to ", chunk_size,
-                     ". You can control this part size using the environment "
-                     "variable S3_MULTI_PART_COPY_PART_SIZE to increase it.")
-            .c_str());
+        TF_MakeStatusMessage(
+            absl::StrCat(
+                "MultiPartCopy with number of parts more than 10000 is "
+                "not supported. Your object ",
+                src, " required ", num_parts,
+                " as multi_part_copy_part_size is set to ", chunk_size,
+                ". You can control this part size using the environment "
+                "variable S3_MULTI_PART_COPY_PART_SIZE to increase it.")
+                .c_str()));
   else
     MultiPartCopy(copy_src, bucket_dst, object_dst, num_parts, file_size,
                   s3_file, status);
