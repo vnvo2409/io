@@ -25,7 +25,6 @@ cc_library(
         "aws-cpp-sdk-core/source/utils/base64/**/*.cpp",
         "aws-cpp-sdk-core/source/utils/crypto/*.cpp",
         "aws-cpp-sdk-core/source/utils/crypto/factory/*.cpp",
-        "aws-cpp-sdk-core/source/utils/crypto/openssl/CryptoImpl.cpp",
         "aws-cpp-sdk-core/source/utils/event/**/*.cpp",
         "aws-cpp-sdk-core/source/utils/json/**/*.cpp",
         "aws-cpp-sdk-core/source/utils/logging/**/*.cpp",
@@ -49,18 +48,21 @@ cc_library(
             "aws-cpp-sdk-core/source/net/linux-shared/*.cpp",
             "aws-cpp-sdk-core/source/platform/linux-shared/*.cpp",
         ]),
-    }),
+    }) + [
+        "aws-cpp-sdk-core/source/utils/crypto/openssl/CryptoImpl.cpp",
+    ],
     hdrs = [
         "aws-cpp-sdk-core/include/aws/core/SDKConfig.h",
     ],
     defines = [
-        'AWS_SDK_VERSION_STRING=\\"1.7.366\\"',
+        'AWS_SDK_VERSION_STRING=\\"1.8.105\\"',
         "AWS_SDK_VERSION_MAJOR=1",
-        "AWS_SDK_VERSION_MINOR=7",
-        "AWS_SDK_VERSION_PATCH=366",
+        "AWS_SDK_VERSION_MINOR=8",
+        "AWS_SDK_VERSION_PATCH=105",
         "ENABLE_OPENSSL_ENCRYPTION=1",
         "ENABLE_CURL_CLIENT=1",
         "OPENSSL_IS_BORINGSSL=1",
+        "ENABLE_CURL_LOGGING",
     ] + select({
         "@bazel_tools//src/conditions:windows": [
             "PLATFORM_WINDOWS",
