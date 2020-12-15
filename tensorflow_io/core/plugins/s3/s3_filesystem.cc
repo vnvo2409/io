@@ -144,11 +144,6 @@ static Aws::Client::ClientConfiguration& GetDefaultClientConfig() {
   if (!init) {
     const char* endpoint = getenv("S3_ENDPOINT");
     if (endpoint) cfg.endpointOverride = Aws::String(endpoint);
-    // TODO (yongtang): `S3_REGION` should be deprecated after 2.0.
-    const char* region = getenv("S3_REGION");
-    if (region) {
-      cfg.region = Aws::String(region);
-    }
     const char* use_https = getenv("S3_USE_HTTPS");
     if (use_https) {
       if (use_https[0] == '0')
