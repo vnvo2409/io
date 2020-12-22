@@ -27,6 +27,7 @@ cc_library(
             "-s",
         ],
     }),
+    linkopts = ["-s"],
     linkstatic = True,
     deps = [
         "//tensorflow_io/core/plugins:plugins_header",
