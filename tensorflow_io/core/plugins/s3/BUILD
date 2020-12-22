@@ -21,11 +21,6 @@ cc_library(
         "@bazel_tools//src/conditions:windows": [],
         "//conditions:default": [
             "-fvisibility=hidden",
-        ],
-    }),
-    linkopts = select({
-        "@bazel_tools//src/conditions:windows": [],
-        "//conditions:default": [
             "-Wl,--exclude-libs=ALL",
         ],
     }),
