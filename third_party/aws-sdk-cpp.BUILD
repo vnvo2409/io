@@ -81,7 +81,7 @@ cc_library(
         ],
         "//conditions:default": [],
     }),
-    copts = tf_io_copts() + select({
+    copts = select({
         "@bazel_tools//src/conditions:windows": [],
         "//conditions:default": [
             "-fvisibility=hidden",
