@@ -81,6 +81,12 @@ cc_library(
         ],
         "//conditions:default": [],
     }),
+    copts = tf_io_copts() + select({
+        "@bazel_tools//src/conditions:windows": [],
+        "//conditions:default": [
+            "-fvisibility=hidden",
+        ],
+    }),
     linkopts = select({
         "@bazel_tools//src/conditions:windows": [
             "-DEFAULTLIB:userenv.lib",
