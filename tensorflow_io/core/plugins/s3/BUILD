@@ -21,10 +21,14 @@ cc_library(
         "@bazel_tools//src/conditions:windows": [],
         "//conditions:default": [
             "-fvisibility=hidden",
-            "-s",
         ],
     }),
-    linkopts = ["-s"],
+    linkopts = select({
+        "@bazel_tools//src/conditions:windows": [],
+        "//conditions:default": [
+            "--exclude-libs=ALL",
+        ],
+    }),
     linkstatic = True,
     deps = [
         "//tensorflow_io/core/plugins:plugins_header",
