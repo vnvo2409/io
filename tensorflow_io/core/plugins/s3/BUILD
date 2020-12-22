@@ -26,7 +26,7 @@ cc_library(
     linkopts = select({
         "@bazel_tools//src/conditions:windows": [],
         "//conditions:default": [
-            "--exclude-libs=ALL",
+            "-Wl,--exclude-libs=ALL",
         ],
     }),
     linkstatic = True,
