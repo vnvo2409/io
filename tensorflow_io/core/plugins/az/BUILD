@@ -16,6 +16,7 @@ cc_library(
         "@bazel_tools//src/conditions:windows": [],
         "//conditions:default": [
             "-fvisibility=hidden",
+            "-s",
         ],
     }),
     linkstatic = True,
