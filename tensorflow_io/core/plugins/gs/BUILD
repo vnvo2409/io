@@ -20,7 +20,12 @@ cc_library(
         "ram_file_block_cache.cc",
         "ram_file_block_cache.h",
     ],
-    copts = tf_io_copts(),
+    copts = tf_io_copts() + select({
+        "@bazel_tools//src/conditions:windows": [],
+        "//conditions:default": [
+            "-fvisibility=hidden",
+        ],
+    }),
     linkstatic = True,
     deps = [
         "//tensorflow_io/core/plugins:plugins_header",

@@ -12,7 +12,12 @@ cc_library(
     srcs = [
         "az_file_system.cc",
     ],
-    copts = tf_io_copts(),
+    copts = tf_io_copts() + select({
+        "@bazel_tools//src/conditions:windows": [],
+        "//conditions:default": [
+            "-fvisibility=hidden",
+        ],
+    }),
     linkstatic = True,
     deps = [
         "//tensorflow_io/core/plugins:plugins_header",

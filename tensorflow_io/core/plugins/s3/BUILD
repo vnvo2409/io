@@ -17,7 +17,12 @@ cc_library(
         "s3_filesystem.cc",
         "s3_filesystem.h",
     ],
-    copts = tf_io_copts(),
+    copts = tf_io_copts() + select({
+        "@bazel_tools//src/conditions:windows": [],
+        "//conditions:default": [
+            "-fvisibility=hidden",
+        ],
+    }),
     linkstatic = True,
     deps = [
         "//tensorflow_io/core/plugins:plugins_header",
