@@ -9,9 +9,9 @@ load(
 
 genrule(
     name = "libtensorflow_c_framework",
-    srcs = ["@local_config_tf//:libtensorflow_framework"],
+    srcs = ["@local_config_tf//:libtensorflow_framework.so"],
     outs = ["libtensorflow_c_framework.so"],
-    cmd = "strip --wildcard -K TF_* $(location @local_config_tf//:libtensorflow_framework) -o $@",
+    cmd = "strip --wildcard -K TF_* $< -o $@",
 )
 
 cc_library(
