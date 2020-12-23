@@ -1,9 +1,10 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "tf_header_lib",
-    hdrs = [":tf_header_include"],
-    includes = ["include"],
+    name = "tf_core_header_lib",
+    hdrs = [":tf_core_header_include"],
+    include_prefix = "tensorflow/core",
+    strip_include_prefix = "include_core",
     visibility = ["//visibility:public"],
 )
 
@@ -22,6 +23,6 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-%{TF_HEADER_GENRULE}
+%{TF_CORE_HEADER_GENRULE}
 %{TF_C_HEADER_GENRULE}
 %{TF_SHARED_LIBRARY_GENRULE}

@@ -27,7 +27,7 @@ cc_library(
     deps = [
         ":types",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
 )
 
@@ -40,7 +40,7 @@ cc_library(
         "@com_google_absl//absl/strings",
         "@htslib",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
 )
 
@@ -79,7 +79,7 @@ cc_library(
         "//nucleus/protos:variants_cc_pb2",
         "@com_google_absl//absl/strings",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
 )
 

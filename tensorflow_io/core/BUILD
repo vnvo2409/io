@@ -32,7 +32,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -47,7 +47,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -61,7 +61,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -75,7 +75,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -91,7 +91,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -105,7 +105,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -194,7 +194,7 @@ cc_library(
         "//tensorflow_io/core:sequence_ops",
         "@curl",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
         "@rapidjson",
     ],
     alwayslink = 1,
@@ -211,7 +211,7 @@ cc_library(
     deps = [
         "//tensorflow_io/core:dataset_ops",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -569,7 +569,7 @@ cc_library(
         "@com_google_absl//absl/types:variant",
         "@kafka",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -585,7 +585,7 @@ cc_library(
     deps = [
         "@aliyun_oss_c_sdk",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -600,7 +600,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
         "@postgresql",
     ],
     alwayslink = 1,
@@ -658,7 +658,7 @@ cc_library(
     deps = [
         "@boringssl//:ssl",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -673,7 +673,7 @@ cc_library(
     linkstatic = True,
     deps = [
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
         "@pulsar",
     ],
     alwayslink = 1,
@@ -690,7 +690,7 @@ cc_library(
     deps = [
         "@libmongoc",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
@@ -725,7 +725,7 @@ cc_binary(
         "//tensorflow_io/core:ignite_ops",
         "//tensorflow_io/core:mongodb_ops",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ] + select({
         "@bazel_tools//src/conditions:windows": [],
         "//conditions:default": [

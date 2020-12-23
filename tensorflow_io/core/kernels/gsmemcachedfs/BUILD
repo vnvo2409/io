@@ -28,7 +28,7 @@ cc_library(
         "@com_google_absl//absl/container:flat_hash_map",
         "@farmhash_archive//:farmhash",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
 )
 
@@ -45,7 +45,7 @@ cc_library(
     deps = [
         "@com_google_absl//absl/memory",
         "@local_config_tf//:libtensorflow_framework",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
 )
 
@@ -59,7 +59,7 @@ cc_library(
         ":gce_memcached_server_list_provider",
         ":memcached_file_block_cache",
         "@com_google_absl//absl/memory",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
 )
 
@@ -74,7 +74,7 @@ cc_library(
         ":gce_memcached_server_list_provider",
         ":memcached_file_system",
         "@com_google_absl//absl/memory",
-        "@local_config_tf//:tf_header_lib",
+        "@local_config_tf//:tf_core_header_lib",
     ],
     alwayslink = 1,
 )
