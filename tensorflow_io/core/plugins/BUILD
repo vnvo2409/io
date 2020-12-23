@@ -15,6 +15,12 @@ genrule(
 )
 
 cc_library(
+    name = "libtf_c",
+    srcs = [":libtensorflow_c_framework"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "plugins_header",
     srcs = [
         "file_system_plugins.h",
@@ -22,7 +28,7 @@ cc_library(
     copts = tf_io_copts(),
     linkstatic = True,
     deps = [
-        ":libtensorflow_c_framework",
+        ":libtf_c",
         "@local_config_tf//:tf_c_header_lib",
     ],
     alwayslink = 1,
