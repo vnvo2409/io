@@ -7,6 +7,13 @@ load(
     "tf_io_copts",
 )
 
+genrule(
+    name = "libtensorflow_c_framework",
+    srcs = ["@local_config_tf//:libtensorflow_framework"],
+    outs = ["libtensorflow_c_framework.so"],
+    cmd = "strip --wildcard -K TF_* $< -o $@",
+)
+
 cc_library(
     name = "plugins_header",
     srcs = [
@@ -15,7 +22,7 @@ cc_library(
     copts = tf_io_copts(),
     linkstatic = True,
     deps = [
-        "@local_config_tf//:libtensorflow_framework",
+        ":libtensorflow_c_framework",
         "@local_config_tf//:tf_c_header_lib",
     ],
     alwayslink = 1,
