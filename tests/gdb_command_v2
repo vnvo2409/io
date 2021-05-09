@@ -1,0 +1,9 @@
+set confirm off
+set pagination off
+set logging on
+break _exit
+commands
+run -m pytest --benchmark-disable -v --import-mode=append $(find . -type f \( -iname "test_*.py" ! \( -iname "test_*_v1.py" -o -iname "test_bigquery.py" \) \))
+end
+bt
+quit
