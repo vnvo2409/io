@@ -26,7 +26,7 @@ import pytest
 import tensorflow as tf
 import tensorflow_io as tfio  # pylint: disable=unused-import
 
-pytest.skip("file system tests is failing with xdist", allow_module_level=True)
+# pytest.skip("file system tests is failing with xdist", allow_module_level=True)
 
 # `ROOT_PREFIX` shouldn't be called directly in tests.
 ROOT_PREFIX = f"tf-io-root-{int(time.time())}/"
