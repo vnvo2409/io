@@ -11,7 +11,7 @@ on:
 env:
   REPO_NAME: ${{ github.repository }}
   EVENT_NAME: ${{ github.event_name }}
-  BAZEL_OPTIMIZATION: --copt=-msse4.2 --copt=-mavx --compilation_mode=opt
+  BAZEL_OPTIMIZATION: --strip=never --copt=-fsanitize=address --copt=-O1 --copt=-fno-omit-frame-pointer --linkopt=-fsanitize=address --copt=-DADDRESS_SANITIZER --copt=-g
 
 jobs:
   lint:
@@ -116,6 +116,7 @@ jobs:
           else
             export BAZEL_OPTIMIZATION="${BAZEL_OPTIMIZATION} --remote_cache=https://storage.googleapis.com/tensorflow-sigs-io --remote_upload_local_results=false"
           fi
+          export BAZEL_OPTIMIZATION="${BAZEL_OPTIMIZATION} --copt -Wno-macro-redefined --copt -D_FORTIFY_SOURCE=0"
           echo "Bring /usr/bin to front as GitHub does not use system python3 by default"
           export PATH=/usr/bin:$PATH
           python3 --version
@@ -240,6 +241,7 @@ jobs:
           else
             export BAZEL_OPTIMIZATION="${BAZEL_OPTIMIZATION} --remote_cache=https://storage.googleapis.com/tensorflow-sigs-io --remote_upload_local_results=false"
           fi
+          export BAZEL_OPTIMIZATION="--action_env=CC=$(which clang) ${BAZEL_OPTIMIZATION}"
           bash -x -e .github/workflows/build.space.sh
           BAZEL_OS=$(uname | tr '[:upper:]' '[:lower:]')
           BAZEL_VERSION=$(cat .bazelversion)
