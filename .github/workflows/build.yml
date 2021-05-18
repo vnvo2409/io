@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
+  # pull_request:
+  #   branches:
+  #     - master
 
 env:
   REPO_NAME: ${{ github.repository }}
@@ -240,6 +240,7 @@ jobs:
           else
             export BAZEL_OPTIMIZATION="${BAZEL_OPTIMIZATION} --remote_cache=https://storage.googleapis.com/tensorflow-sigs-io --remote_upload_local_results=false"
           fi
+          export BAZEL_OPTIMIZATION="${BAZEL_OPTIMIZATION} -c dbg --config=asan"
           bash -x -e .github/workflows/build.space.sh
           BAZEL_OS=$(uname | tr '[:upper:]' '[:lower:]')
           BAZEL_VERSION=$(cat .bazelversion)
