@@ -19,7 +19,7 @@ export TENSORFLOW_INSTALL="$(python3 setup.py --install-require)"
 
 export BAZEL_OS=$(uname | tr '[:upper:]' '[:lower:]')
 curl -sSOL https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-${BAZEL_OS}-x86_64.sh
-bash -e bazel-${BAZEL_VERSION}-installer-${BAZEL_OS}-x86_64.sh
+sudo bash -e bazel-${BAZEL_VERSION}-installer-${BAZEL_OS}-x86_64.sh
 bazel version
 
 python3 -m pip --version
@@ -35,7 +35,6 @@ python3 tools/build/configure.py
 cat .bazelrc
 
 bazel build \
-  --crosstool_top=//third_party/toolchains/gcc7_manylinux2010:toolchain \
   ${BAZEL_OPTIMIZATION} \
   --noshow_progress \
   --noshow_loading_progress \

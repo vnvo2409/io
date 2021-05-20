@@ -1,0 +1,55 @@
+name: Asan
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  REPO_NAME: ${{ github.repository }}
+  EVENT_NAME: ${{ github.event_name }}
+  BAZEL_OPTIMIZATION: -c dbg --config=asan --disk_cache=~/cache
+
+jobs:
+  linux:
+    name: Linux ASAN
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache Bazel
+        uses: actions/cache@v2
+        with:
+          path: ~/cache
+          key: ${{ runner.os }}
+      - name: Build ASAN
+        run: |
+          set -x -e
+          bash -x -e .github/workflows/build.space.sh
+          export BAZEL_OS=$(uname | tr '[:upper:]' '[:lower:]')
+          export BAZEL_VERSION=$(cat .bazelversion)
+          bash -x -e .github/workflows/build.bazel.sh
+      - name: Setup Linux
+        run: |
+          bash -x -e tests/test_pulsar/pulsar_test.sh
+          bash -x -e tests/test_kafka/kafka_test.sh
+          bash -x -e tests/test_aws/aws_test.sh
+          bash -x -e tests/test_gcloud/test_pubsub_bigtable.sh
+          bash -x -e tests/test_prometheus/prometheus_test.sh start
+          bash -x -e tests/test_elasticsearch/elasticsearch_test.sh start
+          bash -x -e tests/test_mongodb/mongodb_test.sh start
+          bash -x -e tests/test_azure/start_azure.sh
+          bash -x -e tests/test_sql/sql_test.sh
+          bash -x -e tests/test_gcloud/test_gcs.sh gcs-emulator
+          bash -x -e tests/test_hdfs/hdfs_test.sh
+      - name: Test ASAN
+        run: |
+          ls
+          export TFIO_DATAPATH=$(realpath bazel-bin)
+          bash -x -e .github/workflows/build.wheel.sh python3.9
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-log
+          path: tests/**/*.log

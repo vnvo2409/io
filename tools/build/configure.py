@@ -114,9 +114,9 @@ def write_config():
                     bazel_rc.write('build --action_env TF_CUDA_VERSION="10.1"\n')
                     bazel_rc.write('build --action_env TF_CUDNN_VERSION="7"\n')
             # Needed for tf rules
-            bazel_rc.write('build --experimental_repo_remote_exec\n')
+            bazel_rc.write("build --experimental_repo_remote_exec\n")
             # Enable platform specific config
-            bazel_rc.write('build --enable_platform_specific_config\n')
+            bazel_rc.write("build --enable_platform_specific_config\n")
             # Needed for GRPC build
             bazel_rc.write('build:macos --copt="-DGRPC_BAZEL_BUILD"\n')
             # Stay with 10.14 for macOS
@@ -124,6 +124,15 @@ def write_config():
             bazel_rc.write('build:macos --linkopt="-mmacosx-version-min=10.14"\n')
             # MSVC (Windows): Standards-conformant preprocessor mode
             bazel_rc.write('build:windows --copt="/Zc:preprocessor"\n')
+            # ASAN
+            bazel_rc.write("build:asan --strip=never\n")
+            bazel_rc.write("build:asan --copt=-fsanitize=address\n")
+            bazel_rc.write("build:asan --copt=-DADDRESS_SANITIZER\n")
+            bazel_rc.write("build:asan --copt=-O1\n")
+            bazel_rc.write("build:asan --copt=-g\n")
+            bazel_rc.write("build:asan --copt=-fno-omit-frame-pointer\n")
+            bazel_rc.write("build:asan --linkopt=-fsanitize=address\n")
+
             bazel_rc.close()
     except OSError:
         print("ERROR: Writing .bazelrc")
